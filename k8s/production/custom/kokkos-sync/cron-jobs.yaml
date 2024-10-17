@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: gh-gl-sync
+  name: kokkos-sync
   namespace: custom
 spec:
   schedule: "*/5 * * * *"
@@ -27,7 +27,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: gh-gl-sync
-                  key: github-access-token
+                  key: kokkos-github-access-token
             # This secret is double base64 encoded
             - name: GITLAB_SSH_KEY_BASE64
               valueFrom:
@@ -38,15 +38,10 @@ spec:
               - configMapRef:
                   name: gh-gl-sync-sentry-config
             args:
-              - "spack/spack"
-              - "ssh://git@ssh.gitlab.spack.io/spack/spack"
+              - "kokkos/kokkos"
+              - "ssh://git@ssh.gitlab.spack.io/kokkos/kokkos"
               - "https://gitlab.spack.io"
-              - "spack/spack"
-              - "--pr-mirror-bucket"
-              - "spack-binaries-prs"
-              - "--main-branch"
-              - "develop"
-              - "--prereq-check"
-              - "prechecks / style"
+              - "kokkos/kokkos"
+
           nodeSelector:
             spack.io/node-pool: base
