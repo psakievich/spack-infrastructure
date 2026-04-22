@@ -1,7 +1,3 @@
-locals {
-  iam_role_name = "GitHubActionsReadonlyRole"
-}
-
 data "tls_certificate" "github_actions" {
   url = "https://token.actions.githubusercontent.com"
 }
@@ -14,10 +10,10 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
   thumbprint_list = [data.tls_certificate.github_actions.certificates.0.sha1_fingerprint]
 }
 
-resource "aws_iam_role" "github_actions" {
+resource "aws_iam_role" "github_actions_readonly" {
   count = var.deployment_name == "prod" ? 1 : 0
 
-  name        = local.iam_role_name
+  name        = "GitHubActionsReadonlyRole"
   description = "Managed by Terraform. IAM Role that a GitHub Actions runner can assume to authenticate with AWS."
 
   assume_role_policy = jsonencode({
@@ -50,11 +46,11 @@ resource "aws_iam_role" "github_actions" {
 }
 
 # The `ReadOnlyAccess` managed policy doesn't include secretsmanager, so we explicitly grant it here.
-resource "aws_iam_role_policy" "github_actions" {
+resource "aws_iam_role_policy" "github_actions_readonly" {
   count = var.deployment_name == "prod" ? 1 : 0
 
   name = "read-secrets"
-  role = aws_iam_role.github_actions[0].id
+  role = aws_iam_role.github_actions_readonly[0].id
 
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -72,9 +68,9 @@ resource "aws_iam_role_policy" "github_actions" {
 
 # This policy grants the GitHub Actions role read-only access to most resources in the AWS account.
 # There are some exceptions, such as secretsmanager (see inline_policy above)
-resource "aws_iam_role_policy_attachment" "github_actions" {
+resource "aws_iam_role_policy_attachment" "github_actions_readonly" {
   count = var.deployment_name == "prod" ? 1 : 0
 
-  role       = aws_iam_role.github_actions[0].name
+  role       = aws_iam_role.github_actions_readonly[0].name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
