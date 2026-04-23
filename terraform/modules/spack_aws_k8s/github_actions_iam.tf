@@ -26,10 +26,8 @@ resource "aws_iam_role" "github_actions_put_to_source_mirror" {
         }
         Condition = {
           StringEquals = {
-            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-          }
-          StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:spack/spack:ref:refs/heads/develop"
+            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com",
+            "token.actions.githubusercontent.com:sub" = "repo:spack/spack-packages:ref:refs/heads/develop"
           }
         }
       }
