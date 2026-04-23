@@ -44,7 +44,7 @@ module "eks" {
     var.deployment_name == "prod" ? {
       github_actions_drift_detection = {
         kubernetes_groups = []
-        principal_arn     = aws_iam_role.github_actions[0].arn
+        principal_arn     = aws_iam_role.github_actions_readonly[0].arn
 
         policy_associations = {
           cluster = {
