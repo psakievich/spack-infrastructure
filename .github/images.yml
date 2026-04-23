@@ -1,6 +1,6 @@
 images:
   - path: ./images/gh-gl-sync
-    image: ghcr.io/spack/ci-bridge:0.0.47
+    image: ghcr.io/spack/ci-bridge:0.0.48
 
   - path: ./images/ci-key-clear
     image: ghcr.io/spack/ci-key-clear:0.0.4
@@ -30,7 +30,7 @@ images:
     image: ghcr.io/spack/cache-indexer:0.0.6
 
   - path: ./analytics
-    image: ghcr.io/spack/django:0.5.21
+    image: ghcr.io/spack/django:0.5.22
 
   - path: ./images/ci-prune-buildcache
     image: ghcr.io/spack/ci-prune-buildcache:0.0.5
